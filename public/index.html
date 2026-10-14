@@ -3,276 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Eclipse Realms - 3D Online Action MMORPG</title>
+  <title>Eclipse Realms - 3D Online Survival RPG</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: none;
-    }
-
-    body, html {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #0b0b10;
-      color: #fff;
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; touch-action: none; }
+    body, html { width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0b0b10; color: #fff; }
+    canvas { display: block; width: 100%; height: 100%; }
 
     .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(5, 5, 10, 0.9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      touch-action: auto;
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(8, 8, 15, 0.92); display: flex; justify-content: center; align-items: center; z-index: 1000; touch-action: auto;
     }
-
     .menu-box {
-      background: #151522;
-      border: 2px solid #4a3b8c;
-      padding: 40px;
-      border-radius: 12px;
-      text-align: center;
-      box-shadow: 0 0 30px rgba(74, 59, 140, 0.5);
-      width: 350px;
+      background: #151522; border: 2px solid #512da8; padding: 40px; border-radius: 12px; text-align: center;
+      box-shadow: 0 0 40px rgba(81, 45, 168, 0.6); width: 380px;
     }
-
-    .menu-box h1 {
-      font-size: 2.2rem;
-      color: #c792ea;
-      margin-bottom: 8px;
-      letter-spacing: 2px;
-    }
-
-    .menu-box p {
-      color: #8f93a2;
-      margin-bottom: 25px;
-      font-size: 0.9rem;
-    }
-
+    .menu-box h1 { font-size: 2.2rem; color: #c792ea; margin-bottom: 8px; letter-spacing: 2px; }
+    .menu-box p { color: #8f93a2; margin-bottom: 25px; font-size: 0.9rem; }
     .menu-box input {
-      width: 100%;
-      padding: 12px;
-      background: #0b0b10;
-      border: 1px solid #3a3f58;
-      color: #fff;
-      border-radius: 6px;
-      font-size: 1rem;
-      margin-bottom: 20px;
-      text-align: center;
+      width: 100%; padding: 12px; background: #0b0b10; border: 1px solid #3a3f58; color: #fff;
+      border-radius: 6px; font-size: 1rem; margin-bottom: 20px; text-align: center;
     }
-
     .primary-btn {
-      background: linear-gradient(135deg, #7c4dff, #512da8);
-      color: #fff;
-      border: none;
-      padding: 14px 28px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border-radius: 6px;
-      cursor: pointer;
+      background: linear-gradient(135deg, #7c4dff, #512da8); color: #fff; border: none; padding: 14px 28px;
+      font-size: 1.1rem; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%;
       transition: transform 0.2s, box-shadow 0.2s;
-      width: 100%;
     }
+    .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(124, 77, 255, 0.4); }
 
-    .primary-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(124, 77, 255, 0.4);
-    }
-
-    #hud {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 10;
-    }
-
+    #hud { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+    
     #player-status {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: rgba(15, 15, 25, 0.85);
-      border: 1px solid #3a3f58;
-      padding: 15px;
-      border-radius: 8px;
-      width: 220px;
-      pointer-events: auto;
+      position: absolute; top: 20px; left: 20px; background: rgba(15, 15, 25, 0.85);
+      border: 1px solid #3a3f58; padding: 15px; border-radius: 8px; width: 220px; pointer-events: auto;
     }
-
-    .name-display {
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #ffcb6b;
-      font-size: 1.05rem;
-    }
-
-    .bar-container {
-      position: relative;
-      width: 100%;
-      height: 16px;
-      background: #0b0b10;
-      border-radius: 4px;
-      margin-bottom: 6px;
-      overflow: hidden;
-      border: 1px solid #2a2f45;
-    }
-
-    .bar {
-      height: 100%;
-      transition: width 0.3s ease;
-    }
-
+    .name-display { font-weight: bold; margin-bottom: 8px; color: #ffcb6b; font-size: 1.05rem; }
+    .bar-container { position: relative; width: 100%; height: 16px; background: #0b0b10; border-radius: 4px; margin-bottom: 6px; overflow: hidden; border: 1px solid #2a2f45; }
+    .bar { height: 100%; transition: width 0.3s ease; }
     .hp-bar { background: #f07178; width: 100%; }
     .mana-bar { background: #82aaff; width: 100%; }
+    .bar-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; font-size: 10px; text-align: center; line-height: 14px; font-weight: bold; color: #fff; text-shadow: 1px 1px 2px #000; }
 
-    .bar-text {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      font-size: 10px;
-      text-align: center;
-      line-height: 14px;
-      font-weight: bold;
-      color: #fff;
-      text-shadow: 1px 1px 2px #000;
+    /* Minimap & Map toggle */
+    #minimap-container {
+      position: absolute; top: 20px; right: 20px; width: 160px; height: 160px;
+      background: rgba(15, 15, 25, 0.9); border: 2px solid #512da8; border-radius: 50%;
+      overflow: hidden; pointer-events: auto; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
+    #minimap-canvas { width: 100%; height: 100%; display: block; }
 
-    #minimap {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: 150px;
-      height: 150px;
-      background: rgba(15, 15, 25, 0.85);
-      border: 2px solid #3a3f58;
-      border-radius: 50%;
-      overflow: hidden;
-      pointer-events: auto;
+    /* Chat System Overlay */
+    #chat-box {
+      position: absolute; bottom: 90px; left: 20px; width: 320px; height: 180px;
+      background: rgba(10, 10, 20, 0.8); border: 1px solid #3a3f58; border-radius: 8px;
+      display: flex; flex-direction: column; pointer-events: auto; overflow: hidden;
     }
+    #chat-messages { flex: 1; padding: 8px; overflow-y: auto; font-size: 0.8rem; color: #cfd8dc; display: flex; flex-direction: column; gap: 4px; }
+    .chat-input-row { display: flex; border-top: 1px solid #3a3f58; }
+    #chat-input { flex: 1; background: #050508; border: none; padding: 8px; color: #fff; font-size: 0.85rem; outline: none; }
+    #chat-send { background: #512da8; color: #fff; border: none; padding: 0 14px; font-weight: bold; cursor: pointer; }
 
-    /* Virtual Joystick Styles */
+    /* Touch Controls */
     #joystick-container {
-      position: absolute;
-      bottom: 30px;
-      left: 30px;
-      width: 130px;
-      height: 130px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      pointer-events: auto;
-      display: none; /* Enabled via script if touch is detected or always on mobile */
-      touch-action: none;
+      position: absolute; bottom: 30px; left: 30px; width: 130px; height: 130px;
+      background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%; pointer-events: auto; display: none;
     }
-
     #joystick-handle {
-      position: absolute;
-      top: 35px;
-      left: 35px;
-      width: 60px;
-      height: 60px;
-      background: rgba(124, 77, 255, 0.6);
-      border: 2px solid #c792ea;
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(0px, 0px);
+      position: absolute; top: 35px; left: 35px; width: 60px; height: 60px;
+      background: rgba(124, 77, 255, 0.6); border: 2px solid #c792ea; border-radius: 50%; pointer-events: none;
     }
-
-    /* Mobile Action Buttons */
     #action-buttons {
-      position: absolute;
-      bottom: 30px;
-      right: 30px;
-      display: none;
-      gap: 15px;
-      pointer-events: auto;
+      position: absolute; bottom: 30px; right: 30px; display: none; gap: 15px; pointer-events: auto;
     }
-
     .mob-btn {
-      width: 65px;
-      height: 65px;
-      background: rgba(20, 20, 35, 0.85);
-      border: 2px solid #4a3b8c;
-      border-radius: 50%;
-      color: #c792ea;
-      font-size: 1.3rem;
-      font-weight: bold;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-      cursor: pointer;
+      width: 65px; height: 65px; background: rgba(20, 20, 35, 0.85); border: 2px solid #512da8;
+      border-radius: 50%; color: #c792ea; font-size: 1.3rem; font-weight: bold; display: flex;
+      justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); cursor: pointer;
     }
-
-    .mob-btn:active {
-      background: #7c4dff;
-      color: #fff;
-    }
+    .mob-btn:active { background: #7c4dff; color: #fff; }
 
     #skill-hotbar {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      pointer-events: auto;
+      position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 10px; pointer-events: auto;
     }
-
     .slot {
-      width: 50px;
-      height: 50px;
-      background: rgba(20, 20, 35, 0.9);
-      border: 2px solid #4a3b8c;
-      border-radius: 8px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      color: #c792ea;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-      font-size: 0.85rem;
+      width: 50px; height: 50px; background: rgba(20, 20, 35, 0.9); border: 2px solid #512da8;
+      border-radius: 8px; display: flex; flex-direction: column; justify-content: center;
+      align-items: center; font-weight: bold; color: #c792ea; font-size: 0.85krem; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
     }
-
-    .slot span {
-      font-size: 0.65rem;
-      color: #8f93a2;
-      margin-top: 1px;
-    }
+    .slot span { font-size: 0.65rem; color: #8f93a2; }
 
     .hidden { display: none !important; }
   </style>
 
-  <!-- Three.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <!-- Socket.IO -->
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 
-  <!-- In-Game HUD Interface -->
+  <!-- In-Game HUD -->
   <div id="hud" class="hidden">
     <div id="player-status">
       <div class="name-display" id="char-name">Hero</div>
@@ -286,28 +115,35 @@
       </div>
     </div>
 
-    <!-- Minimap Placeholder -->
-    <div id="minimap">
-      <canvas id="minimap-canvas" width="150" height="150"></canvas>
+    <!-- Minimap -->
+    <div id="minimap-container" title="Click to expand full map">
+      <canvas id="minimap-canvas" width="160" height="160"></canvas>
     </div>
 
-    <!-- Virtual Joystick Container -->
-    <div id="joystick-container">
-      <div id="joystick-handle"></div>
+    <!-- Multiplayer Chat Box -->
+    <div id="chat-box">
+      <div id="chat-messages">
+        <div style="color: #ffcb6b;">[System] Welcome to Eclipse Realms Survival!</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" placeholder="Type message..." maxlength="150">
+        <button id="chat-send">Send</button>
+      </div>
     </div>
 
-    <!-- Mobile Action Buttons -->
+    <!-- Touch Joysticks & Buttons -->
+    <div id="joystick-container"><div id="joystick-handle"></div></div>
     <div id="action-buttons">
       <div class="mob-btn" id="btn-attack">⚔️</div>
-      <div class="mob-btn" id="btn-jump">⬆️</div>
+      <div class="mob-btn" id="btn-interact">🖐️</div>
     </div>
 
-    <!-- Skill Hotbar -->
+    <!-- Hotbar -->
     <div id="skill-hotbar">
       <div class="slot">⚔️<span>[1]</span></div>
-      <div class="slot">🔥<span>[2]</span></div>
-      <div class="slot">❄️<span>[3]</span></div>
-      <div class="slot">⚡<span>[4]</span></div>
+      <div class="slot">🪓<span>[2]</span></div>
+      <div class="slot">⛏️<span>[3]</span></div>
+      <div class="slot">🔥<span>[4]</span></div>
     </div>
   </div>
 
@@ -315,58 +151,62 @@
   <div id="main-menu" class="overlay">
     <div class="menu-box">
       <h1>ECLIPSE REALMS</h1>
-      <p>3D Online Action MMORPG</p>
+      <p>3D Online Survival MMORPG</p>
       <input type="text" id="username-input" placeholder="Enter Hero Name" value="Wanderer" maxlength="20">
-      <button id="play-btn" class="primary-btn">ENTER ELDORIA</button>
+      <button id="play-btn" class="primary-btn">ENTER SURVIVAL WORLD</button>
     </div>
   </div>
 
-  <!-- Integrated Game Engine Script -->
   <script>
     class World {
       constructor(scene) {
         this.scene = scene;
-        this.buildEldoria();
+        this.resources = {};
+        this.buildEnvironment();
       }
 
-      buildEldoria() {
-        const groundGeo = new THREE.PlaneGeometry(300, 300, 32, 32);
+      buildEnvironment() {
+        // Bright, rich terrain plane
+        const groundGeo = new THREE.PlaneGeometry(400, 400, 64, 64);
         const groundMat = new THREE.MeshStandardMaterial({ 
-          color: 0x2e4f3f, 
-          roughness: 0.8,
-          metalness: 0.2 
+          color: 0x3b6e4f, 
+          roughness: 0.75,
+          metalness: 0.1 
         });
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
         this.scene.add(ground);
 
-        for (let i = 0; i < 50; i++) {
-          const x = (Math.random() - 0.5) * 250;
-          const z = (Math.random() - 0.5) * 250;
-          if (Math.abs(x) < 10 && Math.abs(z) < 10) continue;
-          this.createTree(x, z);
-        }
+        // Grid boundaries / ambient lighting props
       }
 
-      createTree(x, z) {
-        const treeGroup = new THREE.Group();
-        const trunkGeo = new THREE.CylinderGeometry(0.6, 0.8, 4, 6);
-        const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5c4033 });
-        const trunk = new THREE.Mesh(trunkGeo, trunkMat);
-        trunk.position.y = 2;
-        trunk.castShadow = true;
-        treeGroup.add(trunk);
+      spawnResource(data) {
+        let geo, mat;
+        if (data.type === 'tree') {
+          geo = new THREE.ConeGeometry(1.8, 5, 6);
+          mat = new THREE.MeshStandardMaterial({ color: 0x2e5a27, roughness: 0.6 });
+        } else if (data.type === 'rock') {
+          geo = new THREE.DodecahedronGeometry(1.2, 0);
+          mat = new THREE.MeshStandardMaterial({ color: 0x718096, roughness: 0.5 });
+        } else {
+          geo = new THREE.BoxGeometry(1.2, 1.2, 1.2);
+          mat = new THREE.MeshStandardMaterial({ color: 0xd69e2e, emissive: 0xb7791f, roughness: 0.3 });
+        }
 
-        const leavesGeo = new THREE.ConeGeometry(2.5, 6, 6);
-        const leavesMat = new THREE.MeshStandardMaterial({ color: 0x2d5a27 });
-        const leaves = new THREE.Mesh(leavesGeo, leavesMat);
-        leaves.position.y = 5.5;
-        leaves.castShadow = true;
-        treeGroup.add(leaves);
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(data.x, 2.5, data.z);
+        mesh.castShadow = true;
+        mesh.userData = { id: data.id, type: data.type, hp: data.hp };
+        this.scene.add(mesh);
+        this.resources[data.id] = mesh;
+      }
 
-        treeGroup.position.set(x, 0, z);
-        this.scene.add(treeGroup);
+      removeResource(id) {
+        if (this.resources[id]) {
+          this.scene.remove(this.resources[id]);
+          delete this.resources[id];
+        }
       }
     }
 
@@ -375,7 +215,7 @@
         this.scene = scene;
         this.name = name;
         this.keys = {};
-        this.speed = 8.0;
+        this.speed = 7.5;
         this.joystickVector = new THREE.Vector2(0, 0);
 
         this.createAvatar();
@@ -387,7 +227,7 @@
         const group = new THREE.Group();
 
         const bodyGeo = new THREE.BoxGeometry(0.8, 1.4, 0.5);
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x4a5568, metalness: 0.6, roughness: 0.3 });
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x3182ce, metalness: 0.4, roughness: 0.4 });
         const body = new THREE.Mesh(bodyGeo, bodyMat);
         body.position.y = 1.0;
         body.castShadow = true;
@@ -401,7 +241,7 @@
         group.add(head);
 
         const swordGeo = new THREE.BoxGeometry(0.1, 1.2, 0.2);
-        const swordMat = new THREE.MeshStandardMaterial({ color: 0xc0c0c0, metalness: 0.9, roughness: 0.1 });
+        const swordMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.8, roughness: 0.2 });
         const sword = new THREE.Mesh(swordGeo, swordMat);
         sword.position.set(0.6, 1.0, 0.2);
         sword.rotation.x = Math.PI / 4;
@@ -420,14 +260,13 @@
         const container = document.getElementById('joystick-container');
         const handle = document.getElementById('joystick-handle');
         
-        // Show touch controls if mobile or touch device detected
         if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
           container.style.display = 'block';
           document.getElementById('action-buttons').style.display = 'flex';
         }
 
         let activeTouchId = null;
-        const maxDist = 35; // max radius distance for joystick handle
+        const maxDist = 35;
 
         container.addEventListener('touchstart', (e) => {
           e.preventDefault();
@@ -441,11 +280,8 @@
             const touch = e.changedTouches[i];
             if (touch.identifier === activeTouchId) {
               const rect = container.getBoundingClientRect();
-              const centerX = rect.left + rect.width / 2;
-              const centerY = rect.top + rect.height / 2;
-
-              let dx = touch.clientX - centerX;
-              let dy = touch.clientY - centerY;
+              let dx = touch.clientX - (rect.left + rect.width / 2);
+              let dy = touch.clientY - (rect.top + rect.height / 2);
               const dist = Math.sqrt(dx * dx + dy * dy);
 
               if (dist > maxDist) {
@@ -454,14 +290,12 @@
               }
 
               handle.style.transform = `translate(${dx}px, ${dy}px)`;
-              
-              // Normalize output vector (-1 to 1)
               this.joystickVector.set(dx / maxDist, dy / maxDist);
             }
           }
         }, { passive: false });
 
-        const endTouchHandler = (e) => {
+        const endTouch = (e) => {
           if (activeTouchId === null) return;
           for (let i = 0; i < e.changedTouches.length; i++) {
             if (e.changedTouches[i].identifier === activeTouchId) {
@@ -471,21 +305,20 @@
             }
           }
         };
-
-        window.addEventListener('touchend', endTouchHandler);
-        window.addEventListener('touchcancel', endTouchHandler);
+        window.addEventListener('touchend', endTouch);
+        window.addEventListener('touchcancel', endTouch);
       }
 
-      update(delta) {
+      update(delta, cameraAzimuth) {
         const moveDir = new THREE.Vector3();
 
-        // Keyboard Input (WASD / Arrows)
+        // Keyboard WASD
         if (this.keys['KeyW'] || this.keys['ArrowUp']) moveDir.z -= 1;
         if (this.keys['KeyS'] || this.keys['ArrowDown']) moveDir.z += 1;
         if (this.keys['KeyA'] || this.keys['ArrowLeft']) moveDir.x -= 1;
         if (this.keys['KeyD'] || this.keys['ArrowRight']) moveDir.x += 1;
 
-        // Combine with Virtual Joystick input if active
+        // Joystick Input relative to camera azimuth
         if (this.joystickVector.lengthSq() > 0) {
           moveDir.x += this.joystickVector.x;
           moveDir.z += this.joystickVector.y;
@@ -493,11 +326,16 @@
 
         if (moveDir.lengthSq() > 0) {
           if (moveDir.lengthSq() > 1) moveDir.normalize();
+
+          // Transform movement vector relative to camera rotation
+          const rotMatrix = new THREE.Matrix4().makeRotationY(cameraAzimuth);
+          moveDir.applyMatrix4(rotMatrix);
+
           this.mesh.position.addScaledVector(moveDir, this.speed * delta);
           this.mesh.rotation.y = Math.atan2(moveDir.x, moveDir.z);
 
-          if (window.game && window.game.multiplayer) {
-            window.game.multiplayer.sendMovement({
+          if (window.game && window.game.socket) {
+            window.game.socket.emit('playerMovement', {
               x: this.mesh.position.x,
               y: this.mesh.position.y,
               z: this.mesh.position.z,
@@ -508,68 +346,6 @@
       }
     }
 
-    class MultiplayerManager {
-      constructor(scene, player) {
-        this.scene = scene;
-        this.localPlayer = player;
-        this.socket = io();
-        this.remotePlayers = {};
-
-        this.initSocketEvents();
-      }
-
-      initSocketEvents() {
-        this.socket.on('currentPlayers', (players) => {
-          Object.keys(players).forEach((id) => {
-            if (id === this.socket.id) return;
-            this.addRemotePlayer(players[id]);
-          });
-        });
-
-        this.socket.on('playerJoined', (playerData) => {
-          this.addRemotePlayer(playerData);
-        });
-
-        this.socket.on('playerMoved', (playerData) => {
-          if (this.remotePlayers[playerData.id]) {
-            const p = this.remotePlayers[playerData.id];
-            p.position.set(playerData.x, playerData.y, playerData.z);
-            p.rotation.y = playerData.rotY;
-          }
-        });
-
-        this.socket.on('playerDisconnected', (id) => {
-          if (this.remotePlayers[id]) {
-            this.scene.remove(this.remotePlayers[id]);
-            delete this.remotePlayers[id];
-          }
-        });
-      }
-
-      addRemotePlayer(data) {
-        const group = new THREE.Group();
-        const bodyGeo = new THREE.BoxGeometry(0.8, 1.4, 0.5);
-        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x3182ce, metalness: 0.5, roughness: 0.4 });
-        const body = new THREE.Mesh(bodyGeo, bodyMat);
-        body.position.y = 1.0;
-        group.add(body);
-
-        const headGeo = new THREE.SphereGeometry(0.35, 16, 16);
-        const headMat = new THREE.MeshStandardMaterial({ color: 0xffdbac });
-        const head = new THREE.Mesh(headGeo, headMat);
-        head.position.y = 1.95;
-        group.add(head);
-
-        group.position.set(data.x, data.y, data.z);
-        this.scene.add(group);
-        this.remotePlayers[data.id] = group;
-      }
-
-      sendMovement(data) {
-        this.socket.emit('playerMovement', data);
-      }
-    }
-
     class GameApp {
       constructor() {
         this.scene = null;
@@ -577,8 +353,14 @@
         this.renderer = null;
         this.world = null;
         this.player = null;
-        this.multiplayer = null;
+        this.socket = io();
+        this.remotePlayers = {};
         this.clock = new THREE.Clock();
+
+        // Independent Camera Orbit Angles
+        this.cameraAzimuth = 0;
+        this.cameraPolar = Math.PI / 4;
+        this.cameraRadius = 10;
 
         this.initUI();
       }
@@ -596,32 +378,55 @@
           hud.classList.remove('hidden');
           this.initEngine(username);
         });
+
+        // Chat send handler
+        const chatInput = document.getElementById('chat-input');
+        const chatSend = document.getElementById('chat-send');
+        const sendMsg = () => {
+          const text = chatInput.value.trim();
+          if (text) {
+            this.socket.emit('chatMessage', { text });
+            chatInput.value = '';
+          }
+        };
+        chatSend.addEventListener('click', sendMsg);
+        chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMsg(); });
       }
 
       initEngine(username) {
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x0b0b15);
-        this.scene.fog = new THREE.FogExp2(0x0b0b15, 0.015);
+        // Brighter, atmospheric sky and fog
+        this.scene.background = new THREE.Color(0x1a2332);
+        this.scene.fog = new THREE.FogExp2(0x1a2332, 0.008);
 
         this.camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        
+
         this.renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         this.renderer.shadowMap.enabled = true;
         document.body.appendChild(this.renderer.domElement);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+        // BRIGHT LIGHTING UPGRADE
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
         this.scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffeedd, 0.8);
-        dirLight.position.set(50, 100, 50);
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444455, 0.6);
+        hemiLight.position.set(0, 200, 0);
+        this.scene.add(hemiLight);
+
+        const dirLight = new THREE.DirectionalLight(0xfff5e6, 1.2);
+        dirLight.position.set(60, 120, 60);
         dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 1024;
+        dirLight.shadow.mapSize.height = 1024;
         this.scene.add(dirLight);
 
         this.world = new World(this.scene);
         this.player = new Player(this.scene, username);
-        this.multiplayer = new MultiplayerManager(this.scene, this.player);
+
+        this.initSocketEvents();
+        this.initIndependentCameraTouch();
 
         window.addEventListener('resize', () => {
           this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -632,28 +437,132 @@
         this.animate();
       }
 
+      initIndependentCameraTouch() {
+        let isDragging = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        window.addEventListener('pointerdown', (e) => {
+          // If touch is on the right half of screen or desktop drag, enable camera look
+          if (e.clientX > window.innerWidth / 2 || e.pointerType === 'mouse') {
+            isDragging = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+          }
+        });
+
+        window.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const deltaX = e.clientX - lastX;
+          const deltaY = e.clientY - lastY;
+          lastX = e.clientX;
+          lastY = e.clientY;
+
+          this.cameraAzimuth -= deltaX * 0.005;
+          this.cameraPolar = Math.max(0.2, Math.min(Math.PI / 2.2, this.cameraPolar - deltaY * 0.005));
+        });
+
+        window.addEventListener('pointerup', () => { isDragging = false; });
+      }
+
+      initSocketEvents() {
+        this.socket.on('currentPlayers', (players) => {
+          Object.keys(players).forEach((id) => {
+            if (id === this.socket.id) return;
+            this.addRemotePlayer(players[id]);
+          });
+        });
+
+        this.socket.on('playerJoined', (data) => { this.addRemotePlayer(data); });
+
+        this.socket.on('playerMoved', (data) => {
+          if (this.remotePlayers[data.id]) {
+            const p = this.remotePlayers[data.id];
+            p.position.set(data.x, data.y, data.z);
+            p.rotation.y = data.rotY;
+          }
+        });
+
+        this.socket.on('playerDisconnected', (id) => {
+          if (this.remotePlayers[id]) {
+            this.scene.remove(this.remotePlayers[id]);
+            delete this.remotePlayers[id];
+          }
+        });
+
+        this.socket.on('currentResources', (resources) => {
+          Object.values(resources).forEach((res) => {
+            if (res.active) this.world.spawnResource(res);
+          });
+        });
+
+        this.socket.on('resourceRespawned', (res) => { this.world.spawnResource(res); });
+        this.socket.on('resourceDamaged', (res) => {
+          if (!res.active) this.world.removeResource(res.id);
+        });
+
+        this.socket.on('chatMessage', (msg) => {
+          const chatMessages = document.getElementById('chat-messages');
+          const div = document.createElement('div');
+          div.innerHTML = `<span style="color:#82aaff">[${msg.channel.toUpperCase()}]</span> <b>${msg.sender}:</b> ${msg.text}`;
+          chatMessages.appendChild(div);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+      }
+
+      addRemotePlayer(data) {
+        const group = new THREE.Group();
+        const bodyGeo = new THREE.BoxGeometry(0.8, 1.4, 0.5);
+        const bodyMat = new THREE.MeshStandardMaterial({ color: 0x2b6cb0, roughness: 0.4 });
+        group.add(new THREE.Mesh(bodyGeo, bodyMat));
+        group.position.set(data.x, data.y, data.z);
+        this.scene.add(group);
+        this.remotePlayers[data.id] = group;
+      }
+
+      updateMinimap() {
+        const canvas = document.getElementById('minimap-canvas');
+        if (!canvas || !this.player) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Minimap background
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Player marker at center
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+        ctx.fillStyle = '#ffcb6b';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
       animate = () => {
         requestAnimationFrame(this.animate);
-
         const delta = this.clock.getDelta();
 
         if (this.player) {
-          this.player.update(delta);
+          this.player.update(delta, this.cameraAzimuth);
 
-          const idealOffset = new THREE.Vector3(0, 4, -8).applyQuaternion(this.player.mesh.quaternion);
-          const idealLookat = this.player.mesh.position.clone().add(new THREE.Vector3(0, 1.5, 0));
+          // Calculate independent camera spherical orbit
+          const pPos = this.player.mesh.position;
+          const offsetX = this.cameraRadius * Math.sin(this.cameraPolar) * Math.sin(this.cameraAzimuth);
+          const offsetY = this.cameraRadius * Math.cos(this.cameraPolar);
+          const offsetZ = this.cameraRadius * Math.sin(this.cameraPolar) * Math.cos(this.cameraAzimuth);
 
-          this.camera.position.lerp(this.player.mesh.position.clone().add(idealOffset), 0.1);
-          this.camera.lookAt(idealLookat);
+          this.camera.position.set(pPos.x + offsetX, pPos.y + offsetY + 1.5, pPos.z + offsetZ);
+          this.camera.lookAt(pPos.clone().add(new THREE.Vector3(0, 1.2, 0)));
+
+          this.updateMinimap();
         }
 
         this.renderer.render(this.scene, this.camera);
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      window.game = new GameApp();
-    });
+    window.addEventListener('DOMContentLoaded', () => { window.game = new GameApp(); });
   </script>
 </body>
 </html>
